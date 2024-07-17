@@ -5,6 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.coderslab.charity.entity.Institution;
+import pl.coderslab.charity.repository.DonationRepository;
+import pl.coderslab.charity.repository.InstitutionRepository;
 import pl.coderslab.charity.service.DonationService;
 import pl.coderslab.charity.service.InstitutionService;
 
@@ -18,14 +20,14 @@ public class HomeController {
     private final InstitutionService institutionService;
     private final DonationService donationService;
 
+    private final DonationRepository donationRepository;
+
+
     @RequestMapping("/")
     public String homeAction(Model model){
-        List<Institution> institutions = institutionService.getAllInstitutions();
-        model.addAttribute("institutions", institutions);
-        Integer sumOfQuantity = donationService.getTotalQuantity();
-        model.addAttribute("sumOfQuantity", sumOfQuantity);
-        Long allDonations = donationService.getTotalDonation();
-        model.addAttribute("allDonations", allDonations);
+        model.addAttribute("institutions", institutionService.getAllInstitutions());
+        model.addAttribute("sumOfQuantity", donationService.getTotalQuantity());
+        model.addAttribute("allDonations", donationService.getTotalDonation());
         return "index";
     }
 }

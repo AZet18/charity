@@ -32,11 +32,11 @@ public class DonationService {
         donationRepository.deleteById(id);
     }
 
-    public Integer getTotalQuantity() {
-        return donationRepository.sumQuantity();
+    public Long getTotalQuantity() { //TODO
+        return donationRepository.sumQuantity().orElse(0L);
     }
 
-    public Long getTotalDonation() {
+    public long getTotalDonation() {
         return donationRepository.count();
     }
 }

@@ -1,6 +1,8 @@
 package pl.coderslab.charity.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.coderslab.charity.entity.Category;
@@ -17,7 +19,8 @@ public class InstitutionService {
     private final InstitutionRepository institutionRepository;
 
     public List<Institution> getAllInstitutions() {
-        return institutionRepository.findAll();
+        Pageable pageable = Pageable.ofSize(4);
+        return institutionRepository.findAll(pageable).getContent();
     }
 
     public Institution getInstitutionById(Long id) {

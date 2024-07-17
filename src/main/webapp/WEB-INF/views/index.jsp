@@ -73,11 +73,11 @@
 
         <ul class="help--slides-items">
             <c:forEach var="institution" items="${institutions}" varStatus="status">
-                <c:if test="${status.index % 2 == 0}">
+                <c:if test="${status.index % 2 == 0}"> <!--count-->
                     <li>
                 </c:if>
                 <div class="col">
-                    <div class="title">Fundacja "${institution.name}"</div>
+                    <div class="title">"${institution.name}"</div>
                     <div class="subtitle">Cel i misja: ${institution.description}</div>
                 </div>
                 <c:if test="${status.index % 2 != 0}">
