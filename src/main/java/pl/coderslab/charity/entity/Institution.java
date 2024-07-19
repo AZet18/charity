@@ -18,11 +18,11 @@ public class Institution {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "{institution.name.notBlank}")
-    @Size(max = 255, message = "{institution.name.size}")
+    @NotBlank
+    @Size(max = 255)
     private String name;
 
-    @NotBlank(message = "{institution.description.notBlank}")
-    @Size(max = 500, message = "{institution.description.size}")
+    @NotBlank
+    @Size(max = 500)
     private String description;
 }

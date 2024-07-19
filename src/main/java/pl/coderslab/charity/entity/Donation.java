@@ -20,40 +20,44 @@ public class Donation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull(message = "{donation.quantity.notNull}")
-    @Min(value = 1, message = "{donation.quantity.min}")
+    @NotNull
+    @Min(value = 1)
     private Integer quantity;
 
     @ManyToMany
     @JoinTable(name = "donation_category",
             joinColumns = @JoinColumn(name = "donation_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
-    @NotEmpty(message = "{donation.categories.notEmpty}")
+    @NotEmpty
     private List<Category> categories;
 
     @ManyToOne
     @JoinColumn(name = "institution_id")
-    @NotNull(message = "{donation.institution.notNull}")
+    @NotNull
     private Institution institution;
 
-    @NotBlank(message = "{donation.street.notBlank}")
+    @NotBlank
     private String street;
-    @NotBlank(message = "{donation.city.notBlank}")
+    @NotBlank
     private String city;
 
     @Column(name = "zip_code")
-    @NotBlank(message = "{donation.zipCode.notBlank}")
+    @NotBlank
     private String zipCode;
+
+    @Column(name = "phone_number")
+    @NotBlank
+    private String phoneNumber;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "pick_up_date")
-    @NotNull(message = "{donation.pickUpDate.notNull}")
-    @FutureOrPresent(message = "{donation.pickUpDate.futureOrPresent}")
+    @NotNull
+    @FutureOrPresent
     private LocalDate pickUpDate;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "HH:mm")
     @Column(name = "pick_up_time")
-    @NotNull(message = "{donation.pickUpTime.notNull}")
+    @NotNull
     private LocalTime pickUpTime;
 
     @Column(name = "pick_up_comment")

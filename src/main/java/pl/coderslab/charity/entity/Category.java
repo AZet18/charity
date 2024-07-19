@@ -15,6 +15,6 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank(message = "{category.name.notBlank}")
+    @NotBlank
     private String name;
 }

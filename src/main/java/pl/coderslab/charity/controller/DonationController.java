@@ -26,24 +26,30 @@ public class DonationController {
 
     @GetMapping("/form")
     public String showDonationForm(Model model) {
-        model.addAttribute("donation", new Donation());
-        model.addAttribute("institutions", institutionService.getAllInstitutions());
-        model.addAttribute("categories", categoryService.getAllCategories());
+        forFormModel(model, new Donation());
         return "donationForm";
     }
 
     @PostMapping("/form")
-    public String submitForm(@Valid @ModelAttribute("donation") Donation donation, BindingResult result, Model model) {
+    public String submitForm(@Valid Donation donation, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("institutions", institutionService.getAllInstitutions());
-            model.addAttribute("categories", categoryService.getAllCategories());
+            forFormModel(model, donation);
             return "donationForm";
         }
         donationService.saveDonation(donation);
         return "redirect:/formConfirmation";
     }
 
+    @GetMapping("formConfirmation")
+    public String formConfirmation() {
+        return "formConfirmation";
+    }
 
+    private void forFormModel(Model model, Donation donation) {
+        model.addAttribute("donation", new Donation());
+        model.addAttribute("institutions", institutionService.getAllInstitutions());
+        model.addAttribute("categories", categoryService.getAllCategories());
+    }
 
 
 }
