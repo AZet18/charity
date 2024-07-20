@@ -174,7 +174,6 @@ document.addEventListener("DOMContentLoaded", function() {
           }
         });
         document.getElementById("summaryCategories").innerText = categoriesText;
-        // document.getElementById("summaryCategories").innerText = "Kategorie darowizn: " + categories.forEach(category => category.description + '\n');
       }
       const institution = document.querySelector("input[name=institution]:checked ~ .description .title");
       if(institution !== null) {

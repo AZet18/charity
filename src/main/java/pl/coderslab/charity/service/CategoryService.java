@@ -8,6 +8,7 @@ import pl.coderslab.charity.repository.CategoryRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,13 +23,18 @@ public class CategoryService {
     public Category getCategoryById(Long id) {
         Optional<Category> optionalCategory = categoryRepository.findById(id);
         return optionalCategory.orElseThrow(() -> new RuntimeException("Category not found " + id));
+    //pozytytwny kiedy dostaje w odpowiedzi category
+        //został rzucony exception
     }
 
     public Category saveCategory(Category category) {
         return categoryRepository.save(category);
     }
+    //verify
+    //sprawdzic wywowałnie z id który dałem na wejściu
 
     public void deleteCategory(Long id) {
         categoryRepository.deleteById(id);
+    //verify
     }
 }
