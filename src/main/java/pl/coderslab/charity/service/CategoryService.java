@@ -25,6 +25,7 @@ public class CategoryService {
         return optionalCategory.orElseThrow(() -> new RuntimeException("Category not found " + id));
     //pozytytwny kiedy dostaje w odpowiedzi category
         //został rzucony exception
+        //TEST TODO
     }
 
     public Category saveCategory(Category category) {
