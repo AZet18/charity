@@ -164,6 +164,32 @@ document.addEventListener("DOMContentLoaded", function() {
       this.$step.parentElement.hidden = this.currentStep >= 5;
 
       // TODO: get data from inputs and show them in summary
+      const categories = document.querySelectorAll("input[name=categories]:checked ~ .description");
+      if(categories.length > 0) {
+        let categoriesText = "Kategorie darowizn: ";
+        categories.forEach((category, index) => {
+          categoriesText += category.innerText;
+          if (index < categories.length - 1) {
+            categoriesText += ", ";
+          }
+        });
+        document.getElementById("summaryCategories").innerText = categoriesText;
+        // document.getElementById("summaryCategories").innerText = "Kategorie darowizn: " + categories.forEach(category => category.description + '\n');
+      }
+      const institution = document.querySelector("input[name=institution]:checked ~ .description .title");
+      if(institution !== null) {
+        document.getElementById("summaryInstitution").innerText = "Dla fundacji: " + institution.innerText;
+      }
+      document.getElementById("summaryStreet").innerText = document.getElementById("street").value;
+      document.getElementById("summaryCity").innerText = document.getElementById("city").value;
+      document.getElementById("summaryZipCode").innerText = document.getElementById("zipCode").value;
+      document.getElementById("summaryPhoneNumber").innerText = document.getElementById("phoneNumber").value;
+      document.getElementById("summaryDate").innerText = document.getElementById("pickUpDate").value;
+      document.getElementById("summaryTime").innerText = document.getElementById("pickUpTime").value;
+      document.getElementById("summaryComment").innerText = document.getElementById("pickUpComment").value;
+
+      document.getElementById("summaryQuantity").innerText = "Liczba worków: " + document.getElementById("quantity").value;
+
     }
 
   }

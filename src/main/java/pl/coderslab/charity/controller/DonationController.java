@@ -15,6 +15,7 @@ import pl.coderslab.charity.service.DonationService;
 import pl.coderslab.charity.service.InstitutionService;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -26,14 +27,13 @@ public class DonationController {
 
     @GetMapping("/form")
     public String showDonationForm(Model model) {
-        forFormModel(model, new Donation());
+        model.addAttribute("donation", new Donation());
         return "donationForm";
     }
 
     @PostMapping("/form")
-    public String submitForm(@Valid Donation donation, BindingResult result, Model model) {
+    public String submitForm(@Valid Donation donation, BindingResult result) {
         if (result.hasErrors()) {
-            forFormModel(model, donation);
             return "donationForm";
         }
         donationService.saveDonation(donation);
@@ -45,10 +45,14 @@ public class DonationController {
         return "formConfirmation";
     }
 
-    private void forFormModel(Model model, Donation donation) {
-        model.addAttribute("donation", new Donation());
-        model.addAttribute("institutions", institutionService.getAllInstitutions());
-        model.addAttribute("categories", categoryService.getAllCategories());
+    @ModelAttribute("institutions")
+    private List<Institution> institutionsForFormModel() {
+        return institutionService.getAllInstitutions();
+    }
+
+    @ModelAttribute("categories")
+    private List<Category> categoriesForFormModel() {
+        return categoryService.getAllCategories();
     }
 
 
