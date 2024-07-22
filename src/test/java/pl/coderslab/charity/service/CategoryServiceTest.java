@@ -9,6 +9,7 @@ import pl.coderslab.charity.entity.Category;
 import pl.coderslab.charity.repository.CategoryRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -32,7 +33,39 @@ class CategoryServiceTest {
 
     }
 
+    @Test
+    void getCategoryByIdShouldReturnCategory() {
+        Long categoryId = 1L;
+        Category category = new Category(1L, "test3");
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
+        Category categoryResult = categoryService.getCategoryById(1L);
+        assertEquals(category, categoryResult);
+        verify(categoryRepository).findById(categoryId);
+    }
 
+    @Test
+    void getCategoryByIdShouldThrowExceptionWhenNotFound() {
+        Long id = 1L;
+        when(categoryRepository.findById(id)).thenReturn(Optional.empty());
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> categoryService.getCategoryById(id));
+        assertEquals("Category not found " + id, exception.getMessage());
+        verify(categoryRepository).findById(id);
+    }
 
+    @Test
+    void saveCategory() {
+        Category category = new Category(1L, "test4");
+        when(categoryRepository.save(category)).thenReturn(category);
+        Category result = categoryService.saveCategory(category);
+        assertEquals(category, result);
+        verify(categoryRepository).save(category);
+    }
 
+    @Test
+    void deleteCategory() {
+        Long categoryId = 1L;
+        categoryService.deleteCategory(categoryId);
+        verify(categoryRepository).deleteById(categoryId);
+
+    }
 }
