@@ -34,7 +34,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    void getCategoryByIdShouldReturnCategory() {
+    void getCategoryByIdShouldReturnCategoryIfExist() {
         Long categoryId = 1L;
         Category category = new Category(1L, "test3");
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
@@ -44,7 +44,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    void getCategoryByIdShouldThrowExceptionWhenNotFound() {
+    void getCategoryByIdShouldThrowExceptionCategoryWhenNotFound() {
         Long id = 1L;
         when(categoryRepository.findById(id)).thenReturn(Optional.empty());
         RuntimeException exception = assertThrows(RuntimeException.class, () -> categoryService.getCategoryById(id));
@@ -53,7 +53,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    void saveCategory() {
+    void saveCategoryShouldReturnSavedCategory() {
         Category category = new Category(1L, "test4");
         when(categoryRepository.save(category)).thenReturn(category);
         Category result = categoryService.saveCategory(category);
@@ -62,7 +62,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    void deleteCategory() {
+    void deleteCategoryShouldCallDeletedById() {
         Long categoryId = 1L;
         categoryService.deleteCategory(categoryId);
         verify(categoryRepository).deleteById(categoryId);
