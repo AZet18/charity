@@ -30,7 +30,6 @@ class CategoryServiceTest {
         assertEquals(2, category.size());
         assertEquals("test", category.get(0).getName());
         verify(categoryRepository).findAll();
-
     }
 
     @Test
