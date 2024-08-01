@@ -166,15 +166,11 @@ document.addEventListener("DOMContentLoaded", function() {
       // TODO: get data from inputs and show them in summary
       const categories = document.querySelectorAll("input[name=categories]:checked ~ .description");
       if(categories.length > 0) {
-        let categoriesText = "Kategorie darowizn: ";
-        categories.forEach((category, index) => {
-          categoriesText += category.innerText;
-          if (index < categories.length - 1) {
-            categoriesText += ", ";
-          }
-        });
+        const categoriesText = "Kategorie darowizn: " + Array.from(categories)
+            .map(c=> c.innerText)
+            .join(", ");
+
         document.getElementById("summaryCategories").innerText = categoriesText;
-        // document.getElementById("summaryCategories").innerText = "Kategorie darowizn: " + categories.forEach(category => category.description + '\n');
       }
       const institution = document.querySelector("input[name=institution]:checked ~ .description .title");
       if(institution !== null) {
