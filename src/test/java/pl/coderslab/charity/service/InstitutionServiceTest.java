@@ -22,6 +22,10 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class InstitutionServiceTest {
 
+    private static final Long INSTITUTION_ID_1 = 1L;
+    private static final Long INSTITUTION_ID_2 = 2L;
+    private static final String INSTITUTION_NAME = "Institution";
+
     @Mock
     private InstitutionRepository institutionRepository;
 
@@ -30,58 +34,64 @@ class InstitutionServiceTest {
 
     @Test
     void getAllInstitutionsShouldReturnInstitutionList() {
-        Institution institution1 = new Institution();
-        institution1.setId(1L);
-        Institution institution2 = new Institution();
-        institution2.setId(2L);
-        List<Institution> institutionList = List.of(institution1, institution2);
-        Page<Institution> institutionPage = new PageImpl<>(institutionList);
-        when(institutionRepository.findAll(any(Pageable.class))).thenReturn(institutionPage);
+        when(institutionRepository.findAll(any(Pageable.class))).thenReturn(getInstitutionPage());
 
         List<Institution> institutionsResult = institutionService.getAllInstitutions();
         assertEquals(2, institutionsResult.size());
-        assertEquals(1L, institutionsResult.get(0).getId());
-        assertEquals(2L, institutionsResult.get(1).getId());
+        assertEquals(INSTITUTION_ID_1, institutionsResult.get(0).getId());
+        assertEquals(INSTITUTION_ID_2, institutionsResult.get(1).getId());
         verify(institutionRepository).findAll(any(Pageable.class));
 
     }
 
     @Test
-    void getInstitutionByIdShouldReturnInstitutionIfExist() {
-        Institution institution = new Institution();
-        institution.setId(1L);
-        institution.setName("Institution");
-        when(institutionRepository.findById(1L)).thenReturn(Optional.of(institution));
-        Institution institutionResult = institutionService.getInstitutionById(1L);
+    void getInstitutionByIdShouldReturnInstitutionIfExists() {
+        when(institutionRepository.findById(1L)).thenReturn(Optional.of(getInstitution()));
+
+        Institution institutionResult = institutionService.getInstitutionById(INSTITUTION_ID_1);
         assertNotNull(institutionResult);
-        assertEquals("Institution", institutionResult.getName());
-        assertEquals(1L, institutionResult.getId());
-        verify(institutionRepository).findById(1L);
+        assertEquals(INSTITUTION_NAME, institutionResult.getName());
+        assertEquals(INSTITUTION_ID_1, institutionResult.getId());
+        verify(institutionRepository).findById(INSTITUTION_ID_1);
     }
 
     @Test
     void getInstitutionByIdShouldThrowExceptionWhenNotFound() {
-        Long institutionID = 1L;
-        when(institutionRepository.findById(institutionID)).thenReturn(Optional.empty());
+        when(institutionRepository.findById(INSTITUTION_ID_1)).thenReturn(Optional.empty());
         RuntimeException exception = assertThrows(RuntimeException.class, () ->
-                institutionService.getInstitutionById(institutionID));
-        assertEquals("Institution not found " + institutionID, exception.getMessage());
+                institutionService.getInstitutionById(INSTITUTION_ID_1));
+        assertEquals("Institution not found " + INSTITUTION_ID_1, exception.getMessage());
     }
     @Test
     void deleteInstitutionShouldCallDeletedById() {
-        Long institutionId = 1L;
-        institutionService.deleteInstitution(institutionId);
-        verify(institutionRepository).deleteById(institutionId);
+        institutionService.deleteInstitution(INSTITUTION_ID_1);
+        verify(institutionRepository).deleteById(INSTITUTION_ID_1);
     }
 
     @Test
     void saveInstitutionShouldReturnSavedInsitution() {
-        Institution institution = new Institution();
-        institution.setId(1L);
+        Institution institution = getInstitution();
         when(institutionRepository.save(institution)).thenReturn(institution);
         Institution institutionResult = institutionService.saveInstitution(institution);
         assertEquals(institution, institutionResult);
         verify(institutionRepository).save(institution);
+    }
+
+
+    private Institution getInstitution() {
+        Institution institution = new Institution();
+        institution.setId(INSTITUTION_ID_1);
+        institution.setName(INSTITUTION_NAME);
+        return institution;
+    }
+
+    private Page<Institution> getInstitutionPage() {
+        Institution institution1 = new Institution();
+        institution1.setId(INSTITUTION_ID_1);
+        Institution institution2 = new Institution();
+        institution2.setId(INSTITUTION_ID_2);
+        List<Institution> institutionList = List.of(institution1, institution2);
+        return new PageImpl<>(institutionList);
     }
 
 }

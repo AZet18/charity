@@ -169,12 +169,6 @@ document.addEventListener("DOMContentLoaded", function() {
         const categoriesText = "Kategorie darowizn: " + Array.from(categories)
             .map(c=> c.innerText)
             .join(", ");
-        // categories.forEach((category, index) => {
-        //   categoriesText += category.innerText;
-        //   if (index < categories.length - 1) {
-        //     categoriesText += ", ";
-        //   }
-        // });
 
         document.getElementById("summaryCategories").innerText = categoriesText;
       }

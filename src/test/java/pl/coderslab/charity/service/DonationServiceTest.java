@@ -19,6 +19,11 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class DonationServiceTest {
 
+    private static final Long DONATION_ID_1 = 1L;
+    private static final Long DONATION_ID_2 = 2L;
+    private static final Long DONATION_COUNT = 10L;
+    private static final Long DONATION_QUANTITIES = 100L;
+
     @Mock
     private DonationRepository donationRepository;
 
@@ -27,51 +32,42 @@ public class DonationServiceTest {
 
     @Test
     void getAllDonationsShouldReturnDonationList() {
-        Donation firstDonation = new Donation();
-        firstDonation.setId(1L);
-        Donation secondDonation = new Donation();
-        secondDonation.setId(2L);
-        when(donationRepository.findAll()).thenReturn(List.of(firstDonation, secondDonation));
+        when(donationRepository.findAll()).thenReturn(getDonations());
         List<Donation> donations = donationService.getAllDonations();
-
         assertEquals(2, donations.size());
-        assertEquals(1L, donations.get(0).getId());
-        assertEquals(2L, donations.get(1).getId());
+        assertEquals(DONATION_ID_1, donations.get(0).getId());
+        assertEquals(DONATION_ID_2, donations.get(1).getId());
         verify(donationRepository).findAll();
     }
 
     @Test
-    void getDonationByIdShouldReturnDonationIfExist() {
-        Long donationId = 1L;
-        Donation donation = new Donation();
-        donation.setId(1L);
-        when(donationRepository.findById(donationId)).thenReturn(Optional.of(donation));
-        Donation donationResult = donationService.getDonationById(donationId);
-        assertEquals(donation, donationResult);
-        verify(donationRepository).findById(donationId);
+    void getDonationByIdShouldReturnDonationIfExists() {
+        Donation expectedDonation = getDonation(DONATION_ID_1);
+        when(donationRepository.findById(DONATION_ID_1)).thenReturn(Optional.of(expectedDonation));
+        Donation actualDonation = donationService.getDonationById(DONATION_ID_1);
+        assertDonationEquals(expectedDonation, actualDonation);
+        verify(donationRepository).findById(DONATION_ID_1);
     }
 
     @Test
     void getDonationByIdShouldThrowExceptionDonationWhenNotFound() {
-        Long donationId = 1L;
-        when(donationRepository.findById(donationId)).thenReturn(Optional.empty());
+        when(donationRepository.findById(DONATION_ID_1)).thenReturn(Optional.empty());
         RuntimeException exception = assertThrows(RuntimeException.class, () ->
-                donationService.getDonationById(donationId));
-        assertEquals("Donation not found " + donationId, exception.getMessage());
+                donationService.getDonationById(DONATION_ID_1));
+        assertEquals("Donation not found " + DONATION_ID_1, exception.getMessage());
 
     }
 
     @Test
     void deleteDonationShouldCallDeletedById() {
-        Long donationId = 1L;
-        donationService.deleteDonation(donationId);
-        verify(donationRepository).deleteById(donationId);
+        donationService.deleteDonation(DONATION_ID_1);
+        verify(donationRepository).deleteById(DONATION_ID_1);
 
     }
 
     @Test
     void saveDonationShouldReturnSavedDonation() {
-        Donation donation = new Donation();
+        Donation donation = getDonation(DONATION_ID_1);
         when(donationRepository.save(donation)).thenReturn(donation);
         Donation donationResult = donationService.saveDonation(donation);
         assertEquals(donation, donationResult);
@@ -80,19 +76,35 @@ public class DonationServiceTest {
 
     @Test
     void getTotalQuantityShouldReturnSumOfQuantities() {
-        Long totalQuantities = 10L;
-        when(donationRepository.sumQuantity()).thenReturn(Optional.of(totalQuantities));
+        when(donationRepository.sumQuantity()).thenReturn(Optional.of(DONATION_QUANTITIES));
         Long quantityResult = donationService.getTotalQuantity();
-        assertEquals(totalQuantities, quantityResult);
+        assertEquals(DONATION_QUANTITIES, quantityResult);
         verify(donationRepository).sumQuantity();
     }
 
     @Test
     void getTotalDonationShouldReturnTotalDonationCount() {
-        Long donationCount = 100L;
-        when(donationRepository.count()).thenReturn(donationCount);
+        when(donationRepository.count()).thenReturn(DONATION_COUNT);
         Long donationResult = donationService.getTotalDonation();
-        assertEquals(donationCount, donationResult);
+        assertEquals(DONATION_COUNT, donationResult);
         verify(donationRepository).count();
+    }
+
+    private List<Donation> getDonations() {
+        Donation firstDonation = new Donation();
+        firstDonation.setId(1L);
+        Donation secondDonation = new Donation();
+        secondDonation.setId(2L);
+        return List.of(firstDonation, secondDonation);
+    }
+
+    private Donation getDonation(Long id) {
+        Donation donation = new Donation();
+        donation.setId(id);
+        return donation;
+    }
+
+    private void assertDonationEquals(Donation expected, Donation actual) {
+        assertEquals(expected.getId(), actual.getId());
     }
 }

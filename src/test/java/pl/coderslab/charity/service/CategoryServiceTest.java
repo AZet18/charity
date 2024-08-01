@@ -17,43 +17,46 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class CategoryServiceTest {
 
+    private static final String CATEGORY_NAME = "test";
+    private static final Long CATEGORY_ID_1 = 1L;
+    private static final Long CATEGORY_ID_2 = 2L; ;
+
     @Mock
     private CategoryRepository categoryRepository;
 
     @InjectMocks
     private CategoryService categoryService;
 
+
     @Test
     void getAllCategoriesShouldReturnCategoryList() {
-        when(categoryRepository.findAll()).thenReturn(List.of(new Category(1L, "test"), new Category(2L, null)));
-        List<Category> category = categoryService.getAllCategories();
-        assertEquals(2, category.size());
-        assertEquals("test", category.get(0).getName());
+        when(categoryRepository.findAll()).thenReturn(getCategories());
+        List<Category> categories = categoryService.getAllCategories();
+        assertEquals(2, categories.size());
+        assertEquals(CATEGORY_NAME, categories.get(0).getName());
         verify(categoryRepository).findAll();
     }
 
     @Test
-    void getCategoryByIdShouldReturnCategoryIfExist() {
-        Long categoryId = 1L;
-        Category category = new Category(1L, "test3");
-        when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
-        Category categoryResult = categoryService.getCategoryById(1L);
+    void getCategoryByIdShouldReturnCategoryIfExists() {
+        Category category = new Category(CATEGORY_ID_1, CATEGORY_NAME);
+        when(categoryRepository.findById(CATEGORY_ID_1)).thenReturn(Optional.of(category));
+        Category categoryResult = categoryService.getCategoryById(CATEGORY_ID_1);
         assertEquals(category, categoryResult);
-        verify(categoryRepository).findById(categoryId);
+        verify(categoryRepository).findById(CATEGORY_ID_1);
     }
 
     @Test
     void getCategoryByIdShouldThrowExceptionCategoryWhenNotFound() {
-        Long id = 1L;
-        when(categoryRepository.findById(id)).thenReturn(Optional.empty());
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> categoryService.getCategoryById(id));
-        assertEquals("Category not found " + id, exception.getMessage());
-        verify(categoryRepository).findById(id);
+        when(categoryRepository.findById(CATEGORY_ID_1)).thenReturn(Optional.empty());
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> categoryService.getCategoryById(CATEGORY_ID_1));
+        assertEquals("Category not found " + CATEGORY_ID_1, exception.getMessage());
+        verify(categoryRepository).findById(CATEGORY_ID_1);
     }
 
     @Test
     void saveCategoryShouldReturnSavedCategory() {
-        Category category = new Category(1L, "test4");
+        Category category = new Category(CATEGORY_ID_1, CATEGORY_NAME);
         when(categoryRepository.save(category)).thenReturn(category);
         Category result = categoryService.saveCategory(category);
         assertEquals(category, result);
@@ -66,5 +69,9 @@ class CategoryServiceTest {
         categoryService.deleteCategory(categoryId);
         verify(categoryRepository).deleteById(categoryId);
 
+    }
+
+    private List<Category> getCategories() {
+        return List.of(new Category(CATEGORY_ID_1, CATEGORY_NAME), new Category(CATEGORY_ID_2, null));
     }
 }
