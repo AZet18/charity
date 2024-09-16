@@ -33,7 +33,9 @@ public class DonationServiceTest {
     @Test
     void getAllDonationsShouldReturnDonationList() {
         when(donationRepository.findAll()).thenReturn(getDonations());
+
         List<Donation> donations = donationService.getAllDonations();
+
         assertEquals(2, donations.size());
         assertEquals(DONATION_ID_1, donations.get(0).getId());
         assertEquals(DONATION_ID_2, donations.get(1).getId());
